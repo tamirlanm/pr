@@ -1,0 +1,14 @@
+<div>
+    <button (click)="logout()" style="margin-bottom: 20px;">Logout</button>
+  </div>
+<div>
+  <input [(ngModel)]="newTask.title" name="title" placeholder="Task Title" />
+  <input [(ngModel)]="newTask.description" name="description" placeholder="Description" />
+  <button (click)="addTask()">Add Task</button>
+</div>
+<ul>
+  <li *ngFor="let task of tasks">
+    <input type="checkbox" [checked]="task.completed" (click)="toggleTask(task)" />
+    {{ task.title }} - <button (click)="deleteTask(task.id!)">Delete</button>
+  </li>
+</ul>

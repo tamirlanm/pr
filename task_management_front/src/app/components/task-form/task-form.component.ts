@@ -4,13 +4,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TaskService } from '../../services/task.service';
 import { CategoryService } from '../../services/category.service';
-import { Category } from '../../models/task';
-import { Task } from '../../models/category';
+import { Category } from '../../models/category';
+import { Task } from '../../models/task';
 
 @Component({
   selector: 'app-task-form',
   templateUrl: './task-form.component.html',
-  styleUrls: ['./task-form.component.scss']
+  styleUrls: ['./task-form.component.css'],
+  standalone: true,
 })
 export class TaskFormComponent implements OnInit {
   taskForm: FormGroup;
@@ -114,5 +115,8 @@ export class TaskFormComponent implements OnInit {
         }
       });
     }
+  }
+  cancel(): void {
+    this.router.navigate(['/tasks']);
   }
 }

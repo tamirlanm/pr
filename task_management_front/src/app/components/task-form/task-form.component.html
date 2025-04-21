@@ -55,7 +55,7 @@
         <button type="submit" class="btn-primary" [disabled]="taskForm.invalid">
           {{ isEditMode ? 'Update Task' : 'Create Task' }}
         </button>
-        <button type="button" class="btn-secondary" (click)="router.navigate(['/tasks'])">
+        <button type="button" class="btn-secondary" (click)="cancel()">
           Cancel
         </button>
       </div>

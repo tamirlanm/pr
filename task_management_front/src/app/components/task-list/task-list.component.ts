@@ -1,14 +1,15 @@
 // src/app/components/task-list/task-list.component.ts
 import { Component, OnInit } from '@angular/core';
-import { Task } from '../../models/category';
-import { Category } from '../../models/task';
+import { Task } from '../../models/task';
+import { Category } from '../../models/category';
 import { TaskService } from '../../services/task.service';
 import { CategoryService } from '../../services/category.service';
 
 @Component({
   selector: 'app-task-list',
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.scss']
+  styleUrls: ['./task-list.component.css'],
+  standalone: true,
 })
 export class TaskListComponent implements OnInit {
   tasks: Task[] = [];

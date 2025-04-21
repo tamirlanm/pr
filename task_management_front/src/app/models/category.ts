@@ -1,10 +1,5 @@
-export interface Task {
+export interface Category {
     id?: number;
-    title: string;
-    description: string;
-    completed: boolean;
-    owner: number;
-    category: number | null;
-    created_at?: string;
-  }
-  
+    name: string;
+    color: string;
+}

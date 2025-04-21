@@ -1,0 +1,40 @@
+/* App header */
+.app-header {
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    padding: 0 20px;
+    height: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    .logo h1 {
+      color: var(--primary-color);
+      font-size: 20px;
+    }
+    
+    .nav-menu ul {
+      display: flex;
+      list-style: none;
+      
+      li {
+        margin-left: 20px;
+      }
+      
+      a {
+        &.active {
+          font-weight: bold;
+        }
+      }
+      
+      .btn-logout {
+        background: none;
+        color: var(--text-color);
+        
+        &:hover {
+          color: var(--secondary-color);
+        }
+      }
+    }
+  }
+  

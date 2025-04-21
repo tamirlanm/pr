@@ -1,0 +1,115 @@
+.task-list-container {
+    background-color: var(--white);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 20px;
+  }
+  
+  .task-list-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  
+  .filters {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 20px;
+    
+    .filter-group {
+      display: flex;
+      align-items: center;
+      
+      label {
+        margin-right: 10px;
+        font-weight: 500;
+      }
+      
+      select {
+        padding: 6px 10px;
+        border-radius: 4px;
+        border: 1px solid var(--medium-gray);
+      }
+    }
+  }
+  
+  .task-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  .task-card {
+    background-color: var(--white);
+    border-radius: 6px;
+    border: 1px solid var(--light-gray);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s ease;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+    
+    &.completed {
+      opacity: 0.7;
+      
+      .task-header h3 {
+        text-decoration: line-through;
+      }
+    }
+  }
+  
+  .task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    
+    h3 {
+      margin: 0;
+      font-size: 18px;
+      word-break: break-word;
+    }
+    
+    .task-actions {
+      display: flex;
+      gap: 4px;
+    }
+  }
+  
+  .task-body {
+    margin-bottom: 16px;
+    
+    p {
+      font-size: 14px;
+      color: var(--text-color);
+      word-break: break-word;
+    }
+  }
+  
+  .task-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .category-badge {
+    font-size: 12px;
+    padding: 4px 8px;
+    border-radius: 10px;
+    color: var(--white);
+  }
+  
+  .task-date {
+    font-size: 12px;
+    color: var(--dark-gray);
+  }
+  
+  .no-tasks {
+    text-align: center;
+    padding: 30px;
+    color: var(--dark-gray);
+  }
+  

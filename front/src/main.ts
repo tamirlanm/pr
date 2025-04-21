@@ -21,7 +21,7 @@ bootstrapApplication(AppComponent, {
         component: TaskListComponent,
         canMatch: [() => {
           // Simple auth check - replace with your actual auth logic
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('access_token');
           return !!token;
         }]
       },
@@ -29,7 +29,7 @@ bootstrapApplication(AppComponent, {
         path: 'tasks/:id', 
         component: TaskFormComponent,
         canMatch: [() => {
-          const token = localStorage.getItem('token');
+          const token = localStorage.getItem('access_token');
           return !!token;
         }]
       },

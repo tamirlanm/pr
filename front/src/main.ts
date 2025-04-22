@@ -8,30 +8,24 @@ import { BrowserModule } from '@angular/platform-browser';
 import { TaskListComponent } from './app/components/task-list/task-list.component';
 import { TaskFormComponent } from './app/components/task-form/task-form.component';
 import { LoginComponent } from './app/components/login/login.component';
+import { AuthGuard } from './app/guards/auth.guard';
 
 bootstrapApplication(AppComponent, {
   providers: [
     importProvidersFrom(BrowserModule),
     provideHttpClient(withInterceptors([tokenInterceptor])),
     provideRouter([
-      { path: '', redirectTo: '/tasks', pathMatch: 'full' },
+      {path: '', redirectTo: '/tasks', pathMatch: 'full' },
       { path: 'login', component: LoginComponent },
       { 
         path: 'tasks', 
         component: TaskListComponent,
-        canActivate: [() => {
-          // Simple auth check - replace with your actual auth logic
-          const token = localStorage.getItem('access_token');
-          return !!token;
-        }]
+        canActivate: [AuthGuard]
       },
       { 
         path: 'tasks/:id', 
         component: TaskFormComponent,
-        canActivate: [() => {
-          const token = localStorage.getItem('access_token');
-          return !!token;
-        }]
+        canActivate: [AuthGuard]
       },
       { path: '**', redirectTo: '/tasks' }
     ])

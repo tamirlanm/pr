@@ -40,18 +40,12 @@ def create_task(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_task(request):
-    # Используем сериализатор для валидации и создания задачи
-    serializer = TaskCreateSerializer(data=request.data)
-
+    serializer = TaskCreateSerializer(data=request.data, context={'request': request})
     if serializer.is_valid():
-        # Создаем задачу через сериализатор (создание автоматически обработает данные)
-        task = serializer.save(owner=request.user)  # 'owner' привязываем к текущему пользователю
-
-        # Возвращаем успешный ответ с id созданной задачи
-        return Response({
-            "message": "Task created successfully",
-            "task_id": task.id  # ID только что созданной задачи
-        }, status=201)
+        task = serializer.save()
+        # Return the created task using the TaskSerializer
+        return Response(TaskSerializer(task).data, status=201)
+    return Response(serializer.errors, status=400)
     
     # В случае ошибки валидации возвращаем ошибки с кодом 400
     return Response(serializer.errors, status=400)
@@ -72,11 +66,22 @@ class TaskDetailView(APIView):
         serializer = TaskSerializer(task)
         return Response(serializer.data)
 
+    # In task_management_back/api/views.py
     def put(self, request, pk):
         task = self.get_object(pk, request.user)
         if not task:
             return Response({'error': 'Task not found'}, status=404)
-        serializer = TaskSerializer(task, data=request.data)
+        
+        # Handle the category_id if present
+        category_id = request.data.get('category_id')
+        if category_id is not None:
+            try:
+                category = Category.objects.get(id=category_id)
+                request.data['category'] = category.id
+            except Category.DoesNotExist:
+                request.data['category'] = None
+        
+        serializer = TaskSerializer(task, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -91,7 +96,6 @@ class TaskDetailView(APIView):
 
 
 class LoginView(APIView):
-    permission_classes = [IsAuthenticated]
 
     def post(self, request):
         username = request.data.get('username')

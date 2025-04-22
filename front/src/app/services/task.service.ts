@@ -1,3 +1,4 @@
+// Updated task.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -21,15 +22,21 @@ export class TaskService {
   }
 
   createTask(task: Partial<Task>): Observable<any> {
+    // Match the structure expected by TaskCreateSerializer
     return this.http.post(`${this.apiUrl}/tasks/create/`, {
       title: task.title,
-      description: task.description,
-      category_id: task.category
+      description: task.description || '',
+      category_id: task.category || null
     });
   }
 
   updateTask(task: Task): Observable<Task> {
-    return this.http.put<Task>(`${this.apiUrl}/tasks/${task.id}/`, task);
+    return this.http.put<Task>(`${this.apiUrl}/tasks/${task.id}/`, {
+      title: task.title,
+      description: task.description,
+      completed: task.completed,
+      category_id: task.category
+    });
   }
 
   deleteTask(id: number): Observable<any> {

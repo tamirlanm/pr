@@ -37,7 +37,7 @@ export class TaskListComponent implements OnInit {
   }
 
   loadTasks(): void {
-    this.loading = true;
+    this.loading = true; // Исправлено
     this.taskService.getTasks().subscribe({
       next: (tasks) => {
         this.tasks = tasks;
@@ -101,8 +101,12 @@ export class TaskListComponent implements OnInit {
           this.applyFilters();
         }
       },
-      error: () => {
-        this.error = 'Failed to update task status';
+      error: (err) => {
+        console.error('Error updating task:', err);
+        this.error = `Failed to update task status: ${err.status} ${err.statusText}`;
+        if (err.error) {
+          console.error('Error details:', err.error);
+        }
       }
     });
   }

@@ -8,12 +8,21 @@ from django.contrib.auth import authenticate
 from .models import Task, Category
 from .serializers import TaskSerializer, TaskCreateSerializer, CategorySerializer
 
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def category_list(request):
+    categories = Category.objects.all()
+    serializer = CategorySerializer(categories, many=True)
+    return Response(serializer.data)
+
+@permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def task_list(request):
     tasks = Task.objects.all()
     serializer = TaskSerializer(tasks, many=True)
     return Response(serializer.data)
 
+'''
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_task(request):
@@ -27,17 +36,46 @@ def create_task(request):
         )
         return Response({"message": "Task created"}, status=201)
     return Response(serializer.errors, status=400)
+'''
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_task(request):
+    # Используем сериализатор для валидации и создания задачи
+    serializer = TaskCreateSerializer(data=request.data)
+
+    if serializer.is_valid():
+        # Создаем задачу через сериализатор (создание автоматически обработает данные)
+        task = serializer.save(owner=request.user)  # 'owner' привязываем к текущему пользователю
+
+        # Возвращаем успешный ответ с id созданной задачи
+        return Response({
+            "message": "Task created successfully",
+            "task_id": task.id  # ID только что созданной задачи
+        }, status=201)
+    
+    # В случае ошибки валидации возвращаем ошибки с кодом 400
+    return Response(serializer.errors, status=400)
 
 class TaskDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
+    def get_object(self, pk, user):
+        try:
+            return Task.objects.get(pk=pk, owner=user)
+        except Task.DoesNotExist:
+            return None
+
     def get(self, request, pk):
-        task = Task.objects.get(pk=pk, owner=request.user)
+        task = self.get_object(pk, request.user)
+        if not task:
+            return Response({'error': 'Task not found'}, status=404)
         serializer = TaskSerializer(task)
         return Response(serializer.data)
 
     def put(self, request, pk):
-        task = Task.objects.get(pk=pk, owner=request.user)
+        task = self.get_object(pk, request.user)
+        if not task:
+            return Response({'error': 'Task not found'}, status=404)
         serializer = TaskSerializer(task, data=request.data)
         if serializer.is_valid():
             serializer.save()
@@ -45,12 +83,16 @@ class TaskDetailView(APIView):
         return Response(serializer.errors, status=400)
 
     def delete(self, request, pk):
-        task = Task.objects.get(pk=pk, owner=request.user)
+        task = self.get_object(pk, request.user)
+        if not task:
+            return Response({'error': 'Task not found'}, status=404)
         task.delete()
         return Response(status=204)
 
 
 class LoginView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')

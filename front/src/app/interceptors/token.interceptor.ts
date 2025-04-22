@@ -8,7 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { inject } from '@angular/core';
 import { AuthService } from '../services/auth.service';
-
+/*
 // Convert class-based interceptor to function-based interceptor
 export const tokenInterceptor: HttpInterceptorFn = (
   req: HttpRequest<unknown>, 
@@ -24,5 +24,14 @@ export const tokenInterceptor: HttpInterceptorFn = (
     return next(cloned);
   }
   
+  return next(req);
+};*/
+export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
+  const token = localStorage.getItem('access_token');
+  if (token) {
+    req = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    });
+  }
   return next(req);
 };
